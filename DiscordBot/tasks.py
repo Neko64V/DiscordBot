@@ -1,38 +1,32 @@
 import globals
 import discord
-import subprocess
 from discord.ext import tasks
 from cloudflare_ddns import CloudFlare
 
-# 自機を除いた監視対象のIPアドレス
-AddressList = [ "192.168.1.51", "192.168.1.52", "192.168.1.55" ]
+# CloudFlare
+EMAIL = '****@gmail.com'
+API_KEY = 'CF API TOKEN'
+DomainList = [ "****.com", "****.net" ]
 
-# 指定されたアドレスにPingを飛ばす
-def is_host_alive(HostList):
-    try:
-        for i in HostList:
-            result = subprocess.run(["ping", i,"-c","3", "-W", "300"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            
-            if result.returncode != 0:
-                return False
-            
-        return True
-    except Exception as e:
-        return False
+def is_allserver_alive(HostList):
+    for address in HostList:
+        if globals.is_ping_catched(address) == False:
+            return False
+    return True
 
 # 5分に1回実行する
-@tasks.loop(minutes=5) 
+@tasks.loop(minutes=5) #
 async def BackgroundTasks():
 
-    # 各所にpingを飛ばす
-    if is_host_alive(AddressList):
-        await globals.bot.change_presence(activity=discord.Game("サーバー正常 : {}".format(globals.getTime())), status=discord.Status.online)
+    # サーバーのステータス更新
+    if is_allserver_alive(globals.AddressList):
+        await globals.bot.change_presence(activity=discord.Game("サーバー正常 : {}".format(globals.get_current_time())), status=discord.Status.online)  # 緑 (オンライン)
     else:
-        await globals.bot.change_presence(activity=discord.Game("サーバー異常 : {}".format(globals.getTime())), status=discord.Status.idle)
+        await globals.bot.change_presence(activity=discord.Game("サーバー異常 : {}".format(globals.get_current_time())), status=discord.Status.idle)    # オレンジ (退席中)
 
-    # CloudFlare DDNS
-    for domain in globals.DomainList:
-        cf = CloudFlare(globals.EMAIL, globals.API_KEY, domain)
+    # CloudFlare DDNS - レコードのIPアドレスが更新されるまで通知し続けるのであとで改善しておく。あと書き直したい
+    for domain in DomainList:
+        cf = CloudFlare(EMAIL, API_KEY, domain)
         cf_record = cf.get_record("A", domain)
 
         if globals.get_global_ip().strip() not in cf_record["content"]:

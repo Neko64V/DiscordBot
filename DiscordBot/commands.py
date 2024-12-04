@@ -1,27 +1,25 @@
+import discord
 import globals
-import subprocess
 from discord.ext import commands
-
-AllAddressList = [ "192.168.1.51", "192.168.1.52", "192.168.1.55" ]
 
 # Get server status
 @globals.bot.command()
+@commands.has_role("Developer")
 async def status(ctx):
-    status_code = 0
-    try:
-        for addr in AllAddressList:
-            result = subprocess.run(["ping", addr,"-c","3", "-W", "300"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            if result.returncode != 0:
-                status_code = 1
+    flag = False
+    async with ctx.channel.typing():
+        for addr in globals.AddressList:
+            if globals.is_ping_catched(addr) == False:
                 await ctx.send("[-] {} is DEAD".format(addr))
-    except Exception as e:
-        status_code = 1
-        await ctx.send("[-] {} is DEAD".format(addr))
-
-    if status_code == 0:
+                flag = True
+    if flag is False:
         await ctx.send("[+] Passed")
+        await globals.bot.change_presence(activity=discord.Game("サーバー正常 : {}".format(globals.get_current_time())), status=discord.Status.online)  # ステータスの更新
+    else:
+        await globals.bot.change_presence(activity=discord.Game("サーバー異常 : {}".format(globals.get_current_time())), status=discord.Status.idle)
 
 # Get IP Address
 @globals.bot.command()
+@commands.has_role("Developer")
 async def getip(ctx):
     await ctx.send(globals.get_global_ip())
