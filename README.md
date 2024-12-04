@@ -6,9 +6,10 @@
 !**** でコマンドを実行。
 * サーバーのGlobal IPアドレスを取得
 * !status コマンドでどのマシンからPingがこないかをチェック
+* YouTubeをはじめとした動画の音声ファイルのみのダウンロード !ytdl [希望タイトル] [URL]
 
 ## Background Task
-デフォルトだと5分に1回実行されるタスクです。
+デフォルトだと5分に1回実行されるタスク
 * CloudFlare DDNSにIPアドレスを通知する
 * 各VM/マシンにPingを飛ばして生きてるかを確認、それに応じてBOTのステータスを変更
 
@@ -18,5 +19,6 @@
 * HTTPリクエスト等の、Ping以外の信頼性の高いチェックメソッドを追加
 
 ## 実行
-pip install pytz discord ping3 requests cloudflare_ddns  
+pip install pytz discord ping3 requests cloudflare_ddns yt_dlp  
+sudo apt install ffmpeg
 python3 main.py
