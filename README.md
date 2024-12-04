@@ -9,7 +9,7 @@
 
 ## Background Task
 デフォルトだと5分に1回実行されるタスクです。
-* CloudFlareにIPアドレスを通知する
+* CloudFlare DDNSにIPアドレスを通知する
 * 各VM/マシンにPingを飛ばして生きてるかを確認、それに応じてBOTのステータスを変更
 
 ## ToDo
