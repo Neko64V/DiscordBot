@@ -17,7 +17,7 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    # ここで特定のワードが入っていた場合メッセージの削除等、言論統制が可能
+    # ここで特定のワードが入っていた場合メッセージの削除等ができる。
 
     # これがないと各種コマンドが動作しない
     await globals.bot.process_commands(message)

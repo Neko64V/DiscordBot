@@ -8,17 +8,20 @@ from ping3 import ping
 from discord.ext import commands
 
 # Bot TOKEN
-TOKEN = 'YOUR TOKEN'
+TOKEN = 'DISCORD BOT TOKEN'
 
 # Bot Setting
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all(), case_insensitive=True)
 bot.remove_command("help")
 
 # Chennnel
-DEV_CHANNEL_ID = 0 # Rai's server. "開発者用"
+DEV_CHANNEL_ID = 000000000000000
 
 # 自機を除いた監視対象のIPアドレス
 AddressList = [ "192.168.1.51", "192.168.1.52", "192.168.1.55" ]
+
+# WakeOnLAN MacAddress
+WOL_MAC_ADDR = 'MAC ADDRESS' # 00:00:00:***
 
 # 各種関数
 def get_current_time():

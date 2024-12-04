@@ -5,8 +5,8 @@ from cloudflare_ddns import CloudFlare
 
 # CloudFlare
 EMAIL = '****@gmail.com'
-API_KEY = 'CF API TOKEN'
-DomainList = [ "****.com", "****.net" ]
+API_KEY = 'CF - API KEY'
+DomainList = [ "example.com", "example.net" ]
 
 def is_allserver_alive(HostList):
     for address in HostList:
@@ -15,7 +15,7 @@ def is_allserver_alive(HostList):
     return True
 
 # 5分に1回実行する
-@tasks.loop(minutes=5) #
+@tasks.loop(minutes=5)
 async def BackgroundTasks():
 
     # サーバーのステータス更新
@@ -24,11 +24,12 @@ async def BackgroundTasks():
     else:
         await globals.bot.change_presence(activity=discord.Game("サーバー異常 : {}".format(globals.get_current_time())), status=discord.Status.idle)    # オレンジ (退席中)
 
-    # CloudFlare DDNS - レコードのIPアドレスが更新されるまで通知し続けるのであとで改善しておく。あと書き直したい
+    # CloudFlare DDNS
     for domain in DomainList:
         cf = CloudFlare(EMAIL, API_KEY, domain)
-        cf_record = cf.get_record("A", domain)
+        record = cf.get_record("A", domain)
 
-        if globals.get_global_ip().strip() not in cf_record["content"]:
+        # レコードと現在のIPアドレスが異なったら
+        if globals.get_global_ip().strip() not in record["content"]:
             cf.sync_dns_from_my_ip()
-            await globals.bot.get_channel(globals.DEV_CHANNEL_ID).send("CloudFlare : Update IP")
+            await globals.bot.get_channel(globals.DEV_CHANNEL_ID).send("CloudFlare : {} Updated IP".format(domain))
