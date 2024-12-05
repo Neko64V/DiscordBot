@@ -11,7 +11,7 @@ from discord.ext import commands
 TOKEN = 'DISCORD BOT TOKEN'
 
 # Bot Setting
-bot = commands.Bot(command_prefix="!", intents=discord.Intents.all(), case_insensitive=True)
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.default(), case_insensitive=True)
 bot.remove_command("help")
 
 # Chennnel
