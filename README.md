@@ -19,6 +19,8 @@
 * HTTPリクエスト等の、Ping以外の信頼性の高いチェックメソッドを追加
 
 ## 実行
-pip install pytz discord ping3 requests cloudflare_ddns yt_dlp  
+```
 sudo apt install ffmpeg
+pip install pytz discord ping3 requests cloudflare_ddns yt_dlp
 python3 main.py
+```
